@@ -3,6 +3,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class TestHomeWork3 {
 
     HomeWork work;
@@ -10,6 +12,26 @@ public class TestHomeWork3 {
     @Before
     public void init() {
         work = new HomeWork();
+    }
+
+    @Test
+    public void testTranslate(){
+        Assert.assertEquals("[x, y, c]", Arrays.toString(
+                work.translate(new String[]{"a", "b", "c"},
+                        new String[]{"a", "b", "d"},
+                        new String[]{"x", "y", "z"})));
+        Assert.assertEquals("[x, b, c]", Arrays.toString(
+                work.translate(new String[]{"a", "b", "c"},
+                        new String[]{"a", "e", "f"},
+                        new String[]{"x", "y", "z"})));
+        Assert.assertEquals("[x, y, z, f, lol]", Arrays.toString(
+                work.translate(new String[]{"a", "b", "c", "d", "e", "f", "lol"},
+                        new String[]{"a", "b", "e", "c", "d"},
+                        new String[]{"x", "y", "z"})));
+        Assert.assertEquals("[x, y, default, default, default, default]", Arrays.toString(
+                work.translate(new String[]{"a", "b", "c", "x", "y", "z"},
+                        new String[]{"a", "b", "d"},
+                        new String[]{"x", "y", "z", "default", "123"})));
     }
 
     @Test
