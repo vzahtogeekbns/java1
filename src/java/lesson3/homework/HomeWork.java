@@ -1,7 +1,10 @@
 package lesson3.homework;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 public class HomeWork {
 
@@ -11,10 +14,16 @@ public class HomeWork {
      * use regex, split, lowerCase, replace methods
      * */
     public int countOfWordsFromDictionaryInString(String input, String[] dictionary) {
-        //посчитать все слова из словаря в input
-        //если одно слово встречается 5 раз его нужно посчитать 5 раз
-        // TODO: 1/21/2020
-        return 0;
+        String [] words = input.split(" ");
+        int cnt = 0;
+        for (String word : words) {
+            word = word.toLowerCase().replaceAll("[^a-z]+", "");
+            System.out.println(word);
+            for (String dic : dictionary) {
+                if (word.equals(dic.toLowerCase())) cnt++;
+            }
+        }
+        return cnt;
     }
 
     /* example:
@@ -23,8 +32,8 @@ public class HomeWork {
      * use sort
      * */
     public int kOrderValue(int[] array, int k) {
-        //метод должен вернуть К по порядку элемент массива
-        return 0;
+        Arrays.sort(array);
+        return array[k-1];
     }
 
     /*
@@ -52,20 +61,72 @@ public class HomeWork {
      * use matches
      * */
     public boolean isEmail(String input) {
-        // TODO: 1/21/2020
-        return false;
+        return input.matches("[a-zA-Z0-9.]+@[a-zA-Z0-9.]+");
     }
 
     public void binarySearchGame() {
         int secretValue = new Random().nextInt(100); // компьютер загадывает число
-        // TODO: 20.01.2020
-        //мы печатаем в консоль наши предположения (в цикле), компютер отвечает > , < или =
-        //на каждый наш вопрос
-        //если задано более 7 вопросов и не угадано значение, мы проиграли
-        //если компютер вывел =, мы выиграли
+        Scanner in = new Scanner(System.in);
+        int cnt = 7;
+        while (cnt > 0) {
+            System.out.println("У вас " + cnt + " попыток, чтобы угадать мое число!" +
+                    " Введите ваше предположение");
+            int userPredict = in.nextInt();
+            if (userPredict > secretValue) {
+                System.out.println("Ваше значение больше моего");
+            } else if (userPredict < secretValue) {
+                System.out.println("Ваше значение меньше моего");
+            } else {
+                System.out.println("Поздравляю, Вы победили! Было загадано число " + secretValue);
+                System.out.println("1. Продолжить\n2. Выйти\nВведите число:");
+                int state = in.nextInt();
+                if (state == 1) {
+                    binarySearchGame();
+                } else if (state == 2) {
+                    return;
+                } else {
+                    System.out.println("Input ERROR");
+                    return;
+                }
+            }
+            cnt--;
+        }
+        System.out.println("Ваши попытки кончились! Вы проиграли!");
     }
 
-    public void wordsGame() {
-        // TODO: 20.01.2020  
+    public void wordsGame() throws FileNotFoundException {
+        String [] words = new Scanner(new File("input.txt"))
+                .nextLine().replaceAll("\\{|\\}|\"|;", "").split(", ");
+        //System.out.println(Arrays.toString(words));
+        Random rnd = new Random();
+        Scanner in = new Scanner(System.in);
+        String secretWord = words[rnd.nextInt(words.length)];
+        System.out.println("Я загадал слово, попробуй его отгадать");
+        while (true) {
+            System.out.println("Введи слово");
+            String word = in.next();
+            if (word.equals(secretWord)) {
+                System.out.println("Ура, ты угадал мое слово, это было: " + secretWord);
+                break;
+            } else {
+                    String s = "";
+                    int minLength = Math.min(word.length(), secretWord.length());
+
+                    for (int i = 0; i < minLength; i++) {
+                        if (word.charAt(i) != secretWord.charAt(i)) {
+                            i = 10000000;
+                            break;
+                        } else {
+                            s += word.charAt(i);
+                        }
+                    }
+                    while (s.length() < 15) s += "#";
+                    System.out.println(s);
+            }
+        }
+    }
+
+    public static void main(String[] args) throws FileNotFoundException {
+        new HomeWork().wordsGame();
     }
 }
